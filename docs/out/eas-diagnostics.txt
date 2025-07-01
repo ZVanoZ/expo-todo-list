@@ -1,0 +1,17 @@
+⠋ Gathering diagnostic information...⠙ Gathering diagnostic information...✔ All needed information gathered!
+
+  EAS CLI 16.13.1 environment info:
+    System:
+      OS: Linux 6.1 Debian GNU/Linux 12 (bookworm) 12 (bookworm)
+      Shell: 5.2.15 - /bin/bash
+    Binaries:
+      Node: 23.11.0 - ~/.nvm/versions/node/v23.11.0/bin/node
+      Yarn: 1.22.22 - ~/.nvm/versions/node/v23.11.0/bin/yarn
+      npm: 10.9.2 - ~/.nvm/versions/node/v23.11.0/bin/npm
+    Utilities:
+      Git: 2.39.5 - /usr/bin/git
+    npmGlobalPackages:
+      eas-cli: 16.13.1
+      expo-cli: 6.3.12
+    Project workflow: managed
+
