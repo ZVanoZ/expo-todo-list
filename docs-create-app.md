@@ -169,6 +169,27 @@ https://expo.dev/artifacts/eas/sZmkHSDQCkuBQVYxtFTWpf.aab
 
 3. Настройка Google Cloud Project (самый важный шаг вне кода)
 
+<details>
+  <summary>Итог</summary>
+
+```text
+Project name  : "expo-todo-list"
+Project ID    : "expo-todo-list-463604"
+Project number: "635246637398"
+
+web-client-1    : 635246637398-rdqqaeg51p90l9e4h9pfp9ce8v5okgoe.apps.googleusercontent.com  
+android-client-1: 635246637398-8ageqa47u6p7atgfsf18n0096h0qgius.apps.googleusercontent.com  
+```
+
+* Базовая информация о проекте в Google Services  [Project name; Project ID; Project number]  
+  https://console.cloud.google.com/iam-admin/settings?project=expo-todo-list-463604&inv=1&invt=Ab1u3Q
+
+* Секреты  
+  [.SECRET/google.md](.SECRET/google.md)
+
+
+</details>
+
 ```text
 Это критически важно для работы с Google API:
 
@@ -648,7 +669,6 @@ keytool -keystore path-to-debug-or-production-keystore -list -v
 
 Скопируйте SHA-1 certificate fingerprint.
 
-
 * Сохраните Client ID и Client Secret:
 
 После создания учетных данных, Google предоставит вам Client ID (для Web и Android) и
@@ -656,8 +676,6 @@ Client Secret (только для Web).
 Сохраните их! Они будут использоваться в коде.
 
 5. Настройте экран согласия OAuth (OAuth consent screen):
-
-# !!!----------------------- @TODO: ПРОДОЛЖИТЬ ТУТ -----------------------------------!!!
 
 ** В меню "APIs & Services" -> "OAuth consent screen".
 
@@ -672,11 +690,35 @@ Client Secret (только для Web).
 будьте осторожны с этим, так как это очень широкий доступ).
 drive.file обычно достаточен.
 
-** Добавьте тестовых пользователей (для тестирования до публикации приложения).
+```text
+Внимание!
+Несколько дней мучился в поисках нужного раздела!!!
 
+Правильный алгоритм такой: 
+1. В меню "APIs & Services" -> "OAuth consent screen".
+Появляется дашбоард с метриками.
+2. В списке слева кликаем ссылку "Data Access"
+В центральной части страницы появится кнопка "Add or remove scopes", а под ней
+три грида ["Your non-sensitive scopes"; "Your sensitive scopes"; "Your restricted scopes"]
+3. Нажимаем "Add or remove scopes"
+Справа выедет панель с перечнем доступов (4 страницы).
+4. Листаем страницы и находим ".../auth/drive.file".
+Отмечаем галкой.
+5. Жамкаем кнопку "Update", которая находится внизу.
+6. В гриде "Your non-sensitive scopes" появится строчка "Google Drive API"
+------------------------------------------------------------------------------- 
+API              | Scope               | User-facing description
+------------------------------------------------------------------------------- 
+Google Drive API | .../auth/drive.file | See, edit, create, and delete only the specific 
+                 |                     |  Google Drive files you use with this app
+-------------------------------------------------------------------------------
 ```
 
+** Добавьте тестовых пользователей (для тестирования до публикации приложения).
+
 4. Создание файла конфигурации API
+
+# !!!----------------------- @TODO: ПРОДОЛЖИТЬ ТУТ -----------------------------------!!!
 
 Создайте файл constants/apiKeys.ts (или .js) для хранения ваших Client ID.
 
