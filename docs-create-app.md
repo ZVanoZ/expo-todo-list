@@ -285,6 +285,44 @@ android-client-1: 635246637398-8ageqa47u6p7atgfsf18n0096h0qgius.apps.googleuserc
 !!>> “http://localhost:<YOUR_APPLICATION_PORT>”
 !!>> as Authorized JavaScript origins & Authorized redirect URIs.
 !!>> Ex: if you application is running on port 8081, URI would be http://localhost:8081
+!!!
+!!! Внимание! Для WEB приложения в режиме разработки нужна дополнительная настройка Google.
+!!! -----
+!!! -- Добавляем локальный адрес в разрешенные
+!!! Если этого не сделать, то при нажатии на кнопку "Войти через Google" получаю ошибку:
+!!! > Доступ заблокирован: Ошибка 400: redirect_uri_mismatch
+!!!
+!!! Настройка:
+!!! 1. Идем в настройки "Client ID for Web application"
+!!! 2. в "Authorized JavaScript origins" добавляем URL
+!!! http://localhost:8081
+!!! http://localhost
+!!! 3. в "Authorized redirect URIs"
+!!! http://localhost:8081
+!!! http://localhost
+!!!
+!!! -----
+!!! -- Добавляем e-mail в разрешенные
+!!! Если этого не сделать, то при нажатии на кнопку "Войти через Google" и авторизации через e-mail автополучаю ошибку:
+!!! > Ошибка 403: access_denied
+!!! > Параметры запроса: access_type=online scope=https://www.googleapis.com/auth/drive.file openid https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email response_type=token redirect_uri=http://localhost:8081 state=aXuvWlJ8Lx flowName=GeneralOAuthFlow client_id=635246637398-rdqqaeg51p90l9e4h9pfp9ce8v5okgoe.apps.googleusercontent.com
+!!! Прикол в том, что приложение в google имеет статус "Testing" (можно увидеть в разделе "Audience").
+!!! И пока прилжение в этом статусе, google разрешает доступ только для тех пользователей, 
+!!! которые прописанв в "Test users".
+!!! Статус приложения можно поменять тут же, в разделе "Audience" нажав кнопку "Publish app"
+!!! @TODO: разобраться с переводом приложения из статуса "Testing" в "Production"(или "Publish" - ХЗ).
+!!!
+!!! Настройка:
+!!! *  Находим раздел Audience 
+!!! https://console.cloud.google.com/auth/audience?inv=1&invt=Ab2cSQ&project=expo-todo-list-463604
+!!! * Находим блок "Test users" (Тестовые пользователи).
+!!! * Нажмите кнопку "ADD USERS" (ДОБАВИТЬ ПОЛЬЗОВАТЕЛЕЙ).
+!!! * Во всплывающем окне введите адрес электронной почты <мой-адрес>@gmail.com и любые другие аккаунты Google, 
+!!! которые вы планируете использовать для тестирования.
+!!! Ограничение 100 пользователей.
+!!! * Нажмите "SAVE" (СОХРАНИТЬ).
+
+
 
 Authorized JavaScript origins: "https://auth.expo.io"
 

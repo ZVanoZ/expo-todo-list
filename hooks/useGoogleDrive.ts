@@ -25,6 +25,8 @@ export const useGoogleDriveAuth = (): GoogleDriveState => {
     const [accessToken, setAccessToken] = useState<string | null>(null);
     const [error, setError] = useState<string | null>(null);
 
+    // Добавляем новое состояние для отслеживания, идет ли процесс авторизации
+    const [isAuthInProgress, setIsAuthInProgress] = useState(false);
 
     const clientId = Platform.select({
         web: GOOGLE_CLIENT_ID_WEB,
@@ -40,12 +42,15 @@ export const useGoogleDriveAuth = (): GoogleDriveState => {
     useEffect(
         () => {
             console.log('useGoogleDrive.ts/useGoogleDriveAuth/useEffect');
-            if (response?.type === 'success') {
-                setAccessToken(response.authentication?.accessToken || null);
-                setError(null);
-            } else if (response?.type === 'error') {
-                setError('Ошибка аутентификации: ' + response.error?.message);
-                console.error('Auth error:', response.error);
+            if (response) { // Только если response определен
+                setIsAuthInProgress(false); // Процесс завершен (успех/ошибка/отмена)
+                if (response.type === 'success') {
+                    setAccessToken(response.authentication?.accessToken || null);
+                    setError(null);
+                } else if (response.type === 'error') {
+                    setError('Ошибка аутентификации: ' + response.error?.message);
+                    console.error('Auth error:', response.error);
+                }
             }
         },
         [response]
@@ -54,8 +59,8 @@ export const useGoogleDriveAuth = (): GoogleDriveState => {
     const signIn = useCallback(
         () => {
             console.log('useGoogleDrive.ts/useGoogleDriveAuth/signIn');
-
             setError(null);
+            setIsAuthInProgress(true); // Устанавливаем в true перед вызовом promptAsync
             promptAsync();
         },
         [promptAsync]
@@ -75,7 +80,7 @@ export const useGoogleDriveAuth = (): GoogleDriveState => {
     return {
         isSignedIn: !!accessToken,
         accessToken,
-        isLoadingAuth: !response && !!request, // Simple loading state
+        isLoadingAuth: isAuthInProgress, // Теперь isLoadingAuth будет отражать реальный статус
         error,
         signIn,
         signOut,

@@ -7,6 +7,7 @@ import { useGoogleDriveAuth, useGoogleDriveFileOps } from '@/hooks/useGoogleDriv
 const TARGET_FILE_NAME = 'my-drive-text-file.txt'; // Имя целевого текстового файла
 
 export default function DriveTextScreen() {
+  // Измененная деструктуризация: 'request' удален, так как он не экспортируется из useGoogleDriveAuth
   const { isSignedIn, accessToken, isLoadingAuth, error: authError, signIn, signOut } = useGoogleDriveAuth();
   const {
     fileContent,
@@ -80,7 +81,8 @@ export default function DriveTextScreen() {
         {authError && <Text style={styles.errorText}>Auth Error: {authError}</Text>}
 
         {!isSignedIn ? (
-            <Button title="Войти через Google" onPress={handleSignIn} disabled={isLoadingAuth || !request} />
+            // Исправлено: удалено '|| !request', так как 'request' не передается из useGoogleDriveAuth
+            <Button title="Войти через Google" onPress={handleSignIn} disabled={isLoadingAuth} />
         ) : (
             <View style={styles.authContainer}>
               <Text style={styles.statusText}>Вы вошли в систему!</Text>
