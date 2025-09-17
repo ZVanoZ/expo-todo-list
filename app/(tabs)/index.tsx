@@ -1,8 +1,10 @@
 // app/(tabs)/index.tsx
 import React, { useState, useEffect } from 'react';
 import { View, Text, Button, StyleSheet, ActivityIndicator, Alert, ScrollView } from 'react-native';
-import LabeledTextInput from '@/components/LabeledTextInput'; // Путь к вашему компоненту
-import { useGoogleDriveAuth, useGoogleDriveFileOps } from '@/hooks/useGoogleDrive'; // Путь к вашим хукам
+import LabeledTextInput from '@/components/LabeledTextInput';
+import {useGoogleDriveAuth} from "@/hooks/google/auth/useGoogleDriveAuth";
+import {useGoogleDriveFileOps} from "@/hooks/google/drive/api/useGoogleDriveFileOps"; // Путь к вашему компоненту
+//import { useGoogleDriveAuth, useGoogleDriveFileOps } from '@/hooks/useNativeGoogleApi'; // Путь к вашим хукам
 
 const TARGET_FILE_NAME = 'my-drive-text-file.txt'; // Имя целевого текстового файла
 

@@ -39,3 +39,4 @@ yarn-error.*
 /ios/
 /.SECRET/
 /tmp/
+/components/__tests__/

@@ -1,116 +1,18 @@
-import {useState, useEffect, useCallback} from 'react';
-import * as Google from 'expo-auth-session/providers/google';
-import * as WebBrowser from 'expo-web-browser';
-import {GOOGLE_CLIENT_ID_WEB, GOOGLE_CLIENT_ID_ANDROID} from '@/constants/apiKeys'; // Adjust path
-import {Platform} from 'react-native';
-
-WebBrowser.maybeCompleteAuthSession();
-
-// SCOPES for Google Drive API
-// drive.file: Allows access to files created or opened by the app.
-// drive: Allows full, permissive scope to access all of a user's files. Use with caution.
-const SCOPES = ['https://www.googleapis.com/auth/drive.file'];
-
-interface GoogleDriveState {
-    isSignedIn: boolean;
-    accessToken: string | null;
-    isLoadingAuth: boolean;
-    error: string | null;
-    signIn: () => void;
-    signOut: () => void;
-}
-
-export const useGoogleDriveAuth = (): GoogleDriveState => {
-    console.log('useGoogleDrive.ts/useGoogleDriveAuth/BEG');
-    const [accessToken, setAccessToken] = useState<string | null>(null);
-    const [error, setError] = useState<string | null>(null);
-
-    // Добавляем новое состояние для отслеживания, идет ли процесс авторизации
-    const [isAuthInProgress, setIsAuthInProgress] = useState(false);
-
-    const clientId = Platform.select({
-        web: GOOGLE_CLIENT_ID_WEB,
-        android: GOOGLE_CLIENT_ID_ANDROID,
-        default: GOOGLE_CLIENT_ID_WEB, // Fallback for other platforms
-    });
-
-    const [request, response, promptAsync] = Google.useAuthRequest({
-        clientId: clientId,
-        scopes: SCOPES,
-    });
-
-    useEffect(
-        () => {
-            console.log('useGoogleDrive.ts/useGoogleDriveAuth/useEffect');
-            if (response) { // Только если response определен
-                setIsAuthInProgress(false); // Процесс завершен (успех/ошибка/отмена)
-                if (response.type === 'success') {
-                    setAccessToken(response.authentication?.accessToken || null);
-                    setError(null);
-                } else if (response.type === 'error') {
-                    setError('Ошибка аутентификации: ' + response.error?.message);
-                    console.error('Auth error:', response.error);
-                }
-            }
-        },
-        [response]
-    );
-
-    const signIn = useCallback(
-        () => {
-            console.log('useGoogleDrive.ts/useGoogleDriveAuth/signIn');
-            setError(null);
-            setIsAuthInProgress(true); // Устанавливаем в true перед вызовом promptAsync
-            promptAsync();
-        },
-        [promptAsync]
-    );
-
-    const signOut = useCallback(
-        () => {
-            console.log('useGoogleDrive.ts/useGoogleDriveAuth/signOut');
-            setAccessToken(null);
-            // В реальном приложении здесь может быть вызов API для отзыва токена
-            setError(null);
-        },
-        []
-    );
-
-    console.log('useGoogleDrive.ts/useGoogleDriveAuth/END');
-    return {
-        isSignedIn: !!accessToken,
-        accessToken,
-        isLoadingAuth: isAuthInProgress, // Теперь isLoadingAuth будет отражать реальный статус
-        error,
-        signIn,
-        signOut,
-    };
-};
-
-interface GoogleDriveFileOpsState {
-    fileContent: string;
-    isLoadingFile: boolean;
-    fileError: string | null;
-    readFile: (accessToken: string, fileId: string) => Promise<void>;
-    writeFile: (accessToken: string, fileId: string, content: string) => Promise<void>;
-    // Добавим поле для хранения ID файла, если его нужно найти
-    foundFileId: string | null;
-    findOrCreateFile: (accessToken: string, fileName: string) => Promise<string | null>;
-}
+import {useState, useCallback} from 'react';
+import {GoogleDriveFileOpsState} from "@/hooks/google/drive/api/GoogleDriveFileOpsState";
 
 export const useGoogleDriveFileOps = (): GoogleDriveFileOpsState => {
-    console.log('useGoogleDrive.ts/useGoogleDriveFileOps/BEG');
+    console.log('useNativeGoogleApi.ts/useGoogleDriveFileOps/BEG');
 
     const [fileContent, setFileContent] = useState('');
     const [isLoadingFile, setIsLoadingFile] = useState(false);
     const [fileError, setFileError] = useState<string | null>(null);
     const [foundFileId, setFoundFileId] = useState<string | null>(null);
 
-
     // Функция для выполнения запросов к Google Drive API
     const driveApiFetch = useCallback(
         async (accessToken: string, url: string, options?: RequestInit) => {
-            console.log('useGoogleDrive.ts/useGoogleDriveFileOps/driveApiFetch');
+            console.log('useNativeGoogleApi.ts/useGoogleDriveFileOps/driveApiFetch');
 
             const headers = {
                 'Authorization': `Bearer ${accessToken}`,
@@ -130,7 +32,7 @@ export const useGoogleDriveFileOps = (): GoogleDriveFileOpsState => {
     // --- Поиск или создание файла ---
     const findOrCreateFile = useCallback(
         async (accessToken: string, fileName: string): Promise<string | null> => {
-            console.log('useGoogleDrive.ts/useGoogleDriveFileOps/findOrCreateFile');
+            console.log('useNativeGoogleApi.ts/useGoogleDriveFileOps/findOrCreateFile');
 
             setIsLoadingFile(true);
             setFileError(null);
@@ -179,7 +81,7 @@ export const useGoogleDriveFileOps = (): GoogleDriveFileOpsState => {
     // --- Чтение файла ---
     const readFile = useCallback(
         async (accessToken: string, fileId: string) => {
-            console.log('useGoogleDrive.ts/useGoogleDriveFileOps/readFile');
+            console.log('useNativeGoogleApi.ts/useGoogleDriveFileOps/readFile');
             setIsLoadingFile(true);
             setFileError(null);
             try {
@@ -205,7 +107,7 @@ export const useGoogleDriveFileOps = (): GoogleDriveFileOpsState => {
     // В данном примере будет простое обновление.
     const writeFile = useCallback(
         async (accessToken: string, fileId: string, content: string) => {
-            console.log('useGoogleDrive.ts/useGoogleDriveFileOps/writeFile');
+            console.log('useNativeGoogleApi.ts/useGoogleDriveFileOps/writeFile');
             setIsLoadingFile(true);
             setFileError(null);
             try {
@@ -241,8 +143,8 @@ export const useGoogleDriveFileOps = (): GoogleDriveFileOpsState => {
         },
         [driveApiFetch]
     );
-
-    console.log('useGoogleDrive.ts/useGoogleDriveFileOps/END');
+    
+    console.log('useNativeGoogleApi.ts/useGoogleDriveFileOps/END');
     return {
         fileContent,
         isLoadingFile,

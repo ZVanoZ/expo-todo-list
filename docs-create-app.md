@@ -187,7 +187,6 @@ android-client-1: 635246637398-8ageqa47u6p7atgfsf18n0096h0qgius.apps.googleuserc
 * Секреты  
   [.SECRET/google.md](.SECRET/google.md)
 
-
 </details>
 
 ```text
@@ -824,3 +823,12 @@ export const GOOGLE_CLIENT_ID_ANDROID = 'YOUR_ANDROID_CLIENT_ID.apps.googleuserc
 ```
 
 ---
+
+## Установка дополнительных библиотек
+
+* "googleapis" - клиент для работы с Google Drive
+
+  **Нам незачем использовать нативный API.**
+  ```shell
+  npx expo install googleapis
+  ```
